@@ -9,14 +9,6 @@ public class CloudHealth : MonoBehaviour
     public int health;
     public Text healthTXT;
 
-    
-    [Header("pik")]
-    [SerializeField] private int cum;
-    public Vector3 monkey;
-    public Camera monkeystreams;
-    public int fortnite;
-    
-
     [Header("Pos")]
     public Vector3 AttackPos;
     public Vector3 IdlePos;
