@@ -11,6 +11,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private float _cloudAttckTimer;
     [SerializeField] private int _cloudAttckTimerStart;
     [SerializeField] private Text _cloudAttckTimerTxt;
+    [SerializeField] private Slider _cloudSlider;
 
     [Header("Barret")]
     [SerializeField] private GameObject barretObj;
@@ -18,6 +19,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private float _barretAttckTimer;
     [SerializeField] private int _barretAttckTimerStart;
     [SerializeField] private Text _barretAttckTimerTxt;
+    [SerializeField] private Slider _barretSlider;
 
     [Header("Crab")]
     [SerializeField] private GameObject crabObj;
@@ -35,6 +37,8 @@ public class BattleManager : MonoBehaviour
     {
         _cloudAttckTimerTxt.text = "Time: " + _cloudAttckTimer;
         _barretAttckTimerTxt.text = "Time: " + _barretAttckTimer;
+        _barretSlider.value = _barretAttckTimer;
+        _cloudSlider.value = _cloudAttckTimer;
 
         if (_turnCounter == 2)
         {
@@ -60,10 +64,21 @@ public class BattleManager : MonoBehaviour
         StartCoroutine(CloudAttacking());
     }
 
+    public void CloudMagicAttack()
+    {
+        StartCoroutine(CloudMagicAttacking());
+    }
+
     public void BarretAttack()
     {
         StartCoroutine(BarretAttacking());
     }
+
+    public void BarretMagicAttack()
+    {
+        StartCoroutine(BarretMagicAttacking());
+    }
+
 
     private void CrabAttack()
     {
@@ -75,6 +90,29 @@ public class BattleManager : MonoBehaviour
         if(_cloudAttckTimer <= 0)
         {
             _cloudDmg = Random.Range(89, 95);
+
+            CloudHealth cloudHealth = cloudObj.GetComponent<CloudHealth>();
+            CrabHealth crabHealth = crabObj.GetComponent<CrabHealth>();
+
+            cloudHealth.shouldMove = 1;
+
+            yield return new WaitForSeconds(.5f);
+
+            crabHealth.health -= _cloudDmg;
+
+            cloudHealth.shouldMove = 0;
+
+            _turnCounter += 1;
+
+            _cloudAttckTimer = _cloudAttckTimerStart;
+        }
+    }
+
+    IEnumerator CloudMagicAttacking()
+    {
+        if (_cloudAttckTimer <= 0)
+        {
+            _cloudDmg = Random.Range(129, 145);
 
             CloudHealth cloudHealth = cloudObj.GetComponent<CloudHealth>();
             CrabHealth crabHealth = crabObj.GetComponent<CrabHealth>();
@@ -116,11 +154,34 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    IEnumerator BarretMagicAttacking()
+    {
+        if (_barretAttckTimer <= 0)
+        {
+            _barretDmg = Random.Range(43, 66);
+
+            CrabHealth crabHealth = crabObj.GetComponent<CrabHealth>();
+            BarretHealth barretHealth = barretObj.GetComponent<BarretHealth>();
+
+            barretHealth.shouldMove = 1;
+
+            yield return new WaitForSeconds(.5f);
+
+            crabHealth.health -= _barretDmg;
+
+            barretHealth.shouldMove = 0;
+
+            _turnCounter += 1;
+
+            _barretAttckTimer = _barretAttckTimerStart;
+        }
+    }
+
     IEnumerator CrabAttacking()
     {
         _turnCounter = 0;
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
 
         _crabDmg = Random.Range(16, 23);
 

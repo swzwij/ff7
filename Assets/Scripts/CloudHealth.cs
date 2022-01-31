@@ -8,25 +8,30 @@ public class CloudHealth : MonoBehaviour
     [Header("Health")]
     public int health;
     public Text healthTXT;
+    public Slider healthSlider;
 
     [Header("Pos")]
     public Vector3 AttackPos;
     public Vector3 IdlePos;
     public int shouldMove;
 
+    public float speed;
+
     private void Update()
-
-    
     {
-        healthTXT.text = "Cloud: " + health;
+        healthTXT.text = health + " / 321";
+        healthSlider.value = health;
 
-        if(shouldMove == 0)
+
+        if (shouldMove == 0)
         {
             transform.position = IdlePos;
         }
         else if(shouldMove == 1)
         {
-            transform.position = AttackPos;
+            float step = speed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, AttackPos, step);
+            transform.Rotate(0, 25, 0 * Time.deltaTime);
         }
     }
 }

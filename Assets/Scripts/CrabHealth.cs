@@ -14,9 +14,11 @@ public class CrabHealth : MonoBehaviour
     public Vector3 IdlePos;
     public int shouldMove;
 
+    public float speed;
+
     private void Update()
     {
-        healthTXT.text = "Crab: " + health;
+        //healthTXT.text = "Crab: " + health;
 
         if (health <= 0)
         {
@@ -29,7 +31,8 @@ public class CrabHealth : MonoBehaviour
         }
         else if (shouldMove == 1)
         {
-            transform.position = AttackPos;
+            float step = speed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, AttackPos, step);
         }
     }
 
